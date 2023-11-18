@@ -30,39 +30,58 @@ for paragraph in data.paragraphs:
         print(f"Error processing paragraph: {e}")
 
 # Initialize turtle
-pen = tu.Turtle()
 screen = tu.Screen()
+screen.title("Turtle Drawing with Restart Button")
+
+pen = tu.Turtle()
 tu.tracer(0)  # Disable auto-update for smoother control
-pen.speed(0)  # Slower speed
-tu.delay(10)  # Add delay in milliseconds (adjust as needed)
+pen.speed(0)  # Slow speed
+tu.delay(10)  # Delay in milliseconds (adjust as needed)
 
 screen.getcanvas().winfo_toplevel().attributes("-fullscreen", True)
 
-# Draw shapes
-for i, path in enumerate(coordinates):
-    if not path:
-        continue  # Skip empty coordinate lists
+# Function to draw shapes
+def draw_shapes():
+    pen.clear()  # Clear previous drawings
+    pen.penup()
     
-    col = colours[i]
-    pen.color(col)
-    pen.begin_fill()
-    
-    first = True
-    for x, y in path:
-        y = -y  # Flip y-axis for correct drawing
-        if first:
-            pen.up()
-            pen.goto(x, y)
-            pen.down()
-            first = False
-        else:
-            pen.goto(x, y)
+    for i, path in enumerate(coordinates):
+        if not path:
+            continue  # Skip empty coordinate lists
         
-        tu.update()  # Update after each step
-        time.sleep(0)  # Small pause to slow down movement
+        col = colours[i]
+        pen.color(col)
+        pen.begin_fill()
+        
+        first = True
+        for x, y in path:
+            y = -y  # Flip y-axis for correct drawing
+            if first:
+                pen.up()
+                pen.goto(x, y)
+                pen.down()
+                first = False
+            else:
+                pen.goto(x, y)
+            
+            tu.update()  # Update after each step
+            time.sleep(0)  # Small pause to slow down movement
 
-    pen.end_fill()
+        pen.end_fill()
 
-# Update screen once everything is drawn
-tu.update()
+    tu.update()
+
+# Function to restart drawing
+def restart():
+    pen.clear()
+    draw_shapes()
+
+# Draw initial shapes
+draw_shapes()
+
+# Add restart button
+screen.listen()
+screen.onkey(restart, "r")  # Press "r" to restart
+
+# Run main loop
 screen.mainloop()
